@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Numerics;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -31,11 +32,7 @@ public class controller : MonoBehaviour
         if (player.heldItem != null)
         {
             animator.Play("Punching");
-            Task.Delay(7000);
-            player.heldItem.GetComponent<throwable>().transform.parent = null;
-            player.heldItem.GetComponent<Rigidbody>().isKinematic = false;
-            player.heldItem.GetComponent<Rigidbody>().AddForce(new Vector3((player.heldItem.GetComponent<throwable>().transform.position.x - player.transform.position.x) * 5 , (player.heldItem.GetComponent<throwable>().transform.position.y - player.transform.position.y) * 5, (player.heldItem.GetComponent<throwable>().transform.position.z - player.transform.position.z) * 5), ForceMode.Impulse);
-            player.heldItem = null;
+            StartCoroutine(DoTheThrow());
             
         }
         else
@@ -48,6 +45,15 @@ public class controller : MonoBehaviour
                 player.heldItem.GetComponent<throwable>().transform.localPosition = new Vector3(0.0f, 0.10f, 3.0f);
             }
         }
+    }
+
+    private IEnumerator DoTheThrow()
+    {   
+        yield return new WaitForSeconds(0.5f);
+        player.heldItem.GetComponent<throwable>().transform.parent = null;
+        player.heldItem.GetComponent<Rigidbody>().isKinematic = false;
+        player.heldItem.GetComponent<Rigidbody>().AddForce(new Vector3((player.heldItem.GetComponent<throwable>().transform.position.x - player.transform.position.x) * 5, (player.heldItem.GetComponent<throwable>().transform.position.y - player.transform.position.y) * 5, (player.heldItem.GetComponent<throwable>().transform.position.z - player.transform.position.z) * 5), ForceMode.Impulse);
+        player.heldItem = null;
     }
 
     //public void OnInteract(InputValue value)
